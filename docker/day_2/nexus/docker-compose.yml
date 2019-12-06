@@ -5,7 +5,8 @@ services:
     image: nginx:1.15-alpine
     restart: unless-stopped
     volumes:
-      - ./data/nginx:/etc/nginx/conf.d
+      - ./configuration/nginx/nexus.conf:/etc/nginx/conf.d/nexus.conf
+      - ./configuration/nginx/certs:/etc/certificates
     ports:
       - "80:80"
       - "443:443"

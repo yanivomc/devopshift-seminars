@@ -15,9 +15,9 @@ services:
     image: nginx:1.15-alpine # NGINX IMAGE AND VERSION
     restart: unless-stopped # CONFIGURE THE CONTINER TO AUTOMATICLY RESTART UNLESS STOPPED
     volumes: # CONFIGURE LOCAL VOLUME THAT WILL STORE:
-      - ./data/nginx:/etc/nginx/conf.d # NGINX CUSTOM CONFIGURATION FILE
-      - ./data/nginx/certs:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
+      - ./configuration/nginx/nexus.conf:/etc/nginx/conf.d/nexus.conf # NGINX CUSTOM CONFIGURATION FILE
+      - ./configuration/nginx/certs:/etc/letsencrypt
+      - ./configuration/certbot/www:/var/www/certbot
     ports: # PORTS TO BE EXPOSED FOR THE CONTAINER
       - "80:80"
       - "443:443"
@@ -47,12 +47,12 @@ Using Volumes we are mounting specific files into specific locations. this way w
 Do <b>note</b>! that in K8S we will use diffrent ways to accomplish this such as configmaps and KV mount
 ~~~
 volumes:
-      - ./data/nginx:/etc/nginx/conf.d
-      - ./data/nginx/certs:/etc/certificates
+      - ./configuration/nginx/nexus.conf:/etc/nginx/conf.d/nexus.conf
+      - ./configuration/nginx/certs:/etc/certificates
 ~~~
 
-- Custom NGINX Configuration ./data/nginx:/etc/nginx/conf.d
-- Custom SSL certificates to be loaded by NGINX ./data/nginx/certs:/etc/certificates
+- Custom NGINX Configuration ./configuration/nginx/nexus.conf:/etc/nginx/conf.d/nexus.conf
+- Custom SSL certificates to be loaded by NGINX ./configuration/nginx/certs:/etc/certificates
 
 
 We also use docker networks to allow DNS resolution using the name of the containers.
