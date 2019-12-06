@@ -22,6 +22,7 @@ services:
         - ./volume/nexus/data:/nexus-data
       environment:
         - NEXUS_CONTEXT=nexus
+      user: root
       networks:
        - nexus
    
