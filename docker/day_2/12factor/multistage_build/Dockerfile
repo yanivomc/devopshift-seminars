@@ -1,36 +1,37 @@
 # Copies in our code and runs NPM Install
 # Phase I
-FROM node:latest as builder
+FROM python:latest as builder
 WORKDIR /usr/src/app
-COPY package* ./
-COPY src/ src/
-RUN [“npm”, “install”]
+COPY flask-api/ ./
+RUN pip install -r requirements.txt
+
 # Lints Code
 # Phase II
-FROM node:latest as linting
-WORKDIR /usr/src/app
-COPY --from=builder /usr/src/app/ .
-RUN [“npm”, “lint”]
-# Gets Sonarqube Scanner from Dockerhub and runs it
-# Phase III
-FROM newmitch/sonar-scanner:latest as sonarqube
-COPY --from=builder /usr/src/app/src /root/src
+FROM eeacms/pylint:latest as linting
+WORKDIR /code
+COPY --from=builder /usr/src/app/pylint.cfg /etc/pylint.cfg
+COPY --from=builder /usr/src/app/*.py ./
+COPY --from=builder /usr/src/app/api ./api
+RUN ["/docker-entrypoint.sh", "pylint"]
+
+# Phase III Running Sonarqube scanner (Sonarqube server also required)
+FROM newtmitch/sonar-scanner as sonarqube
+WORKDIR /usr/src
+COPY --from=builder /usr/src/app/*.py ./
+COPY --from=builder /usr/src/app/api ./api
+RUN sonar-scanner -Dsonar.projectBaseDir=/usr/src
 # Runs Unit Tests
 # Phase IV
-FROM node:latest as unit-tests
+FROM python:latest as unit-tests
 WORKDIR /usr/src/app
-COPY --from=builder /usr/src/app/ .
-RUN [“npm”, “test”]
-# Runs Accessibility Tests
-# Phase V
-FROM node:latest as access-tests
-WORKDIR /usr/src/app
-COPY --from=builder /usr/src/app/ .
-RUN [“npm”, “access-tests”]
+COPY --from=builder /usr/src/app/*.py ./
+COPY --from=builder /usr/src/app/api ./api
+RUN [“make”, “test”]
+
 # Starts and Serves Web Page
 # Phase VI
-FROM node:latest as serve
+FROM python:latest as serve
 WORKDIR /usr/src/app
-COPY --from=builder /usr/src/app/dest ./
-COPY --from=builder /usr/src/app/package* ./
-RUN [“npm”, “start”]
+COPY --from=builder /usr/src/app/*.py ./
+COPY --from=builder /usr/src/app/api ./api
+RUN [“python”, “run_app.py”]
