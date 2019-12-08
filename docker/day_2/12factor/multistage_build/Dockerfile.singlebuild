@@ -1,0 +1,10 @@
+# Copies in our code and runs NPM Install
+# Phase I
+FROM python:3.8 as builder
+WORKDIR /usr/src/app
+COPY flask-api/ ./
+RUN pip install -r requirements.txt
+# Running Unit TESTS
+RUN ["make", "test"] # Becouse we need make we cant use the python slim
+CMD ["python", "run_app.py"]
+

@@ -1,9 +1,14 @@
-# Copies in our code and runs NPM Install
-# Phase I
+# Phase I - Builder source
 FROM python:latest as builder
+# PYTHONUNBUFFERED Force logging to stdout / stderr not to be buffered into ram  
+ENV PYTHONUNBUFFERED=1 
 WORKDIR /usr/src/app
 COPY flask-api/ ./
-RUN pip install -r requirements.txt
+WORKDIR /wheels
+COPY flask-api/requirements.txt ./requirements.txt
+# PIP Will create an archive of our libraries so we don't need to download them again
+# argument - wheel
+RUN pip wheel -r ./requirements.txt 
 
 # Lints Code
 # Phase II
@@ -20,18 +25,32 @@ WORKDIR /usr/src
 COPY --from=builder /usr/src/app/*.py ./
 COPY --from=builder /usr/src/app/api ./api
 RUN sonar-scanner -Dsonar.projectBaseDir=/usr/src
+
 # Runs Unit Tests
 # Phase IV
 FROM python:latest as unit-tests
 WORKDIR /usr/src/app
-COPY --from=builder /usr/src/app/*.py ./
-COPY --from=builder /usr/src/app/api ./api
-RUN [“make”, “test”]
+# Copy all packages instead of rerunning pip install
+COPY --from=builder /wheels /wheels
+RUN     pip install -r /wheels/requirements.txt \
+                      -f /wheels \
+       && rm -rf /wheels \
+       && rm -rf /root/.cache/pip/* 
+
+COPY --from=builder /usr/src/app/ ./
+RUN ["make", "test"]
 
 # Starts and Serves Web Page
 # Phase VI
-FROM python:latest as serve
+FROM python:3.8-slim as serve
 WORKDIR /usr/src/app
+# Copy all packages instead of rerunning pip install
+COPY --from=builder /wheels /wheels
+RUN     pip install -r /wheels/requirements.txt \
+                      -f /wheels \
+       && rm -rf /wheels \
+       && rm -rf /root/.cache/pip/* 
+
 COPY --from=builder /usr/src/app/*.py ./
 COPY --from=builder /usr/src/app/api ./api
-RUN [“python”, “run_app.py”]
+CMD ["python", "run_app.py"]
