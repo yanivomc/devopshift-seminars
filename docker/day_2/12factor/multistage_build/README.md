@@ -11,11 +11,3 @@ We are going to build this application inside a docker container and run:
 2. Unit tests
 3. SonarQube for security check
 
-Dockerfile exmpale:
-~~~
-FROM node:10.15.0
-WORKDIR /app
-COPY dist/ornamentum-demo /app
-EXPOSE 8080
-CMD ["node", "server.js"]
-~~~
