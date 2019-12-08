@@ -67,3 +67,7 @@ This will allow the NGINX container to "call" the NEXUS container by it's name
 ~~~
 
 This allow us to preserve all of Nexus data even if we  shutdown nexus container and start a new one later on.
+
+
+Run it:
+docker-compose up -d 
