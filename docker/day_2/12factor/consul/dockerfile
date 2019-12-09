@@ -7,7 +7,6 @@ RUN pip install -qr requirements.txt
 COPY consul /bin/
 ADD entry-point.sh /bin/
 COPY envconsul /bin/
-
 COPY server.py .
 ENTRYPOINT ["entry-point.sh"]
 CMD ["python3", "./server.py"]
