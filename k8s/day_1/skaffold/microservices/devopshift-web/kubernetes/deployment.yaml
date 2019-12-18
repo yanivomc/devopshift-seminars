@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: leeroy-web
+  name: devopshift-web
   labels:
-    app: leeroy-web
+    app: devopshift-web
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: leeroy-web
+      app: devopshift-web
   template:
     metadata:
       labels:
-        app: leeroy-web
+        app: devopshift-web
     spec:
       containers:
-        - name: leeroy-web
-          image: gcr.io/k8s-skaffold/leeroy-web
+        - name: devopshift-web
+          image: registry.ynot.work/skaffold/devopshift-web
           ports:
             - containerPort: 8080
