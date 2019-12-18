@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: devopshift-app
+  labels:
+    app: devopshift-app
+spec:
+  clusterIP: None
+  ports:
+    - port: 80
+      targetport: 50051
+      name: devopshift-app
+  selector:
+    app: devopshift-app
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devopshift-app
+  labels:
+    app: devopshift-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: devopshift-app
+  template:
+    metadata:
+      labels:
+        app: devopshift-app
+    spec:
+      containers:
+      - name: devopshift-app
+        image: registry.ynot.work/skaffold/devopshift-app
+        ports:
+        - containerPort: 50051

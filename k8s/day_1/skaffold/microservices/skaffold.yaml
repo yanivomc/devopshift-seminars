@@ -1,0 +1,18 @@
+apiVersion: skaffold/v1
+kind: Config
+build:
+  artifacts:
+    - image: registry.ynot.work/skaffold/devopshift-web
+      context: ./devopshift-web/
+    - image: registry.ynot.work/skaffold/devopshift-app
+      context: ./devopshift-app/
+deploy:
+  kubectl:
+    manifests:
+      - ./devopshift-web/kubernetes/*
+      - ./devopshift-app/kubernetes/*
+# portForward:
+#   - resourceType: deployment
+#     resourceName: devopshift-web
+#     port: 8080
+#     localPort: 9000
