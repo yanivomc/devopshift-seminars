@@ -5,13 +5,12 @@ metadata:
   labels:
     app: devopshift-app
 spec:
+  clusterIP: None
   ports:
-    - port: 80
-      targetPort: 50051
+    - port: 50051
       name: devopshift-app
   selector:
     app: devopshift-app
-  type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment
