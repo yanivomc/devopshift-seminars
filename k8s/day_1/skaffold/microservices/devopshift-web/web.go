@@ -8,7 +8,7 @@ import (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	resp, err := http.Get("http://devopshift-app")
+	resp, err := http.Get("http://devopshift-app:50051")
 	if err != nil {
 		panic(err)
 	}
