@@ -7,7 +7,7 @@ import (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Devopshift app!!\n")
+	fmt.Fprintf(w, "Devopshift app backend live and responding!!\n")
 }
 
 func main() {
