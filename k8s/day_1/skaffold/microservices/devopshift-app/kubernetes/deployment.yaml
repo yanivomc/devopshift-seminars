@@ -5,7 +5,6 @@ metadata:
   labels:
     app: devopshift-app
 spec:
-  clusterIP: None
   ports:
     - port: 80
       targetport: 50051
