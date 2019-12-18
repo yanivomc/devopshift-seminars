@@ -5,7 +5,7 @@ metadata:
   labels:
     app: devopshift-app
 spec:
-  Type: ClusterIP
+  type: ClusterIP
   ports:
     - port: 50051
       name: devopshift-app
