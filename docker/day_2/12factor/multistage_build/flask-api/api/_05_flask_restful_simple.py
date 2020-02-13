@@ -1,12 +1,21 @@
+### FIXED FILE
 from flask import Flask, abort, request
 from flask_restful import Resource, Api
 from .utils import search_book
+
+# Fixed GLOBAL with Class and resource (PYTHON 3 WAY)
+class Last_id(Resource):
+    def __init__(self, num):
+        self.num = num
+
+    def last_id(self):
+        return self.num
 
 
 app = Flask(__name__)
 api = Api(app)
 
-LAST_ID = 33
+
 books = [{
     'id': 33,
     'title': 'The Raven',
@@ -34,7 +43,7 @@ class BookListResource(Resource):
         return books
 
     def post(self):
-        global LAST_ID
+        LAST_ID = Last_id(33)
         LAST_ID += 1
         data = request.json
         book = {
