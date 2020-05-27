@@ -2,9 +2,9 @@ apiVersion: skaffold/v1
 kind: Config
 build:
   artifacts:
-    - image: registry.ynot.work/skaffold/devopshift-web
+    - image: registry.ynot.work/yanivomc/devopshift-fe
       context: ./devopshift-web/
-    - image: registry.ynot.work/skaffold/devopshift-app
+    - image: registry.ynot.work/yanivomc/devopshift-be
       context: ./devopshift-app/
 deploy:
   kubectl:
