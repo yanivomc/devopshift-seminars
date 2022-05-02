@@ -1,4 +1,4 @@
-FROM python:latest as builder
+FROM python:3.6 as builder
 # PYTHONUNBUFFERED Force logging to stdout / stderr not to be buffered into ram  
 ENV PYTHONUNBUFFERED=1 
 WORKDIR /usr/src/app
@@ -28,7 +28,7 @@ RUN sonar-scanner -Dsonar.projectBaseDir=/usr/src
 
 # Starts and Serves Web Page
 # Phase VI
-FROM python:3.8-slim as serve
+FROM python:3.6-slim as serve
 WORKDIR /usr/src/app
 # Copy all packages instead of rerunning pip install
 COPY --from=builder /wheels /wheels
