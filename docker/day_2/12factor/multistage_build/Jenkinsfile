@@ -7,9 +7,17 @@ node {
    }
    stage('DockerBuild') {
        dir("docker/day_2/12factor/multistage_build/"){
-       sh 'docker build -t test:test -f Dockerfile-pipelines .'
+       sh 'docker build --target builder -t test:test -f Dockerfile-pipelines .'
        }
      }
+   stage('Linting') {
+       dir("docker/day_2/12factor/multistage_build/"){
+       sh 'docker build --target linting -t test:test -f Dockerfile-pipelines .'
+       }
+     }   
    }
    
+
+
+
 
